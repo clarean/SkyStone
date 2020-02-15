@@ -80,7 +80,6 @@ public class XDrive1Test extends OpMode {
     float liftRotation = 0;
     float grabRotation = 0;
     float hookRotation = 0;
-    float bendPosition = 0;
 
     float ColorR = 0;
     float ColorG = 0;
@@ -217,7 +216,6 @@ public class XDrive1Test extends OpMode {
         float lt2 = gamepad2.left_trigger;
         float lt3 = gamepad2.right_trigger;
 
-
         // clip the right/left values so that the values never exceed +/- 1
         x1 = Range.clip(x1, -1, 1);
         y1 = Range.clip(y1, -1, 1);
@@ -238,8 +236,9 @@ public class XDrive1Test extends OpMode {
         float fl = (y1+x1+r1);
         float bl = (y1-x1)+r1;
 
-//        float bendRotationIncrement = y2;
-//        bendRotation += bendRotationIncrement;
+        //takes bendRotation, adds y2 value to bendRotation
+        float bendRotationIncrement = y2;
+        bendRotation += bendRotationIncrement;
 
 //        float liftRotationIncrement = y3;
 //        liftRotation += liftRotationIncrement;
@@ -354,13 +353,13 @@ public class XDrive1Test extends OpMode {
         float bendPower = y2;
         bendPower = (1-(lt2/2));
 
-        bendPosition = motorBend.getCurrentPosition();
+//        bendPosition = motorBend.getCurrentPosition();
 
-        if (bendPosition > 0){
-            bendPosition = 0;
+        if (bendRotation > 0){
+            bendRotation = 0;
         }
-        else if (bendPosition < -123){
-            bendPosition = -123;
+        else if (bendRotation < -123){
+            bendRotation = -123;
         }
 
 
@@ -378,7 +377,7 @@ public class XDrive1Test extends OpMode {
             motorBackLeft.setPower(bl);
         }
         if(!bDebugBend){
-            motorBend.setTargetPosition((int)bendPosition);
+            motorBend.setTargetPosition((int)bendRotation);
             motorBend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorBend.setPower(bendPower);
         }
