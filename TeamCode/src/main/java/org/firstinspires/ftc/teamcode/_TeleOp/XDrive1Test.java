@@ -80,6 +80,7 @@ public class XDrive1Test extends OpMode {
     float liftRotation = 0;
     float grabRotation = 0;
     float hookRotation = 0;
+    float bendPosition = 0;
 
     float ColorR = 0;
     float ColorG = 0;
@@ -145,7 +146,7 @@ public class XDrive1Test extends OpMode {
         try{
             motorBend = hardwareMap.dcMotor.get("bend");
             bendRotation = motorBend.getCurrentPosition();
-            motorBend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motorBend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motorBend.setTargetPosition((int)bendRotation);
             motorBend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorBend.setPower(1.0);
@@ -237,11 +238,11 @@ public class XDrive1Test extends OpMode {
         float fl = (y1+x1+r1);
         float bl = (y1-x1)+r1;
 
-        float bendRotationIncrement = y2;
-        bendRotation += bendRotationIncrement;
+//        float bendRotationIncrement = y2;
+//        bendRotation += bendRotationIncrement;
 
-        float liftRotationIncrement = y3;
-        liftRotation += liftRotationIncrement;
+//        float liftRotationIncrement = y3;
+//        liftRotation += liftRotationIncrement;
 
         if(gamepad2.x){
             grabRotation = 1;
@@ -296,6 +297,7 @@ public class XDrive1Test extends OpMode {
    }
 
 */
+
         dontTurn = false;
 
         if(grabRotation > 1){
@@ -312,6 +314,24 @@ public class XDrive1Test extends OpMode {
             liftRotation = 0;
         }
 
+        // make sure arm doesn't go past foam and doesn't go below table - prevent motor from burning out
+        /*if(bendRotation > 0){
+            bendRotation = 0;
+
+        }
+        else if(bendRotation < -123){
+            bendRotation = -123;
+        }*/
+
+//
+//        if (bendRotation < 0 && bendRotation > -123){
+////            motorBend.setTargetPosition((int)bendRotation);
+//        }
+//        else {
+//            motorBend.setPower(0);
+//        }
+
+// i am big god
         fr /= 2;
         br /= 2;
         fl /= 2;
@@ -327,11 +347,21 @@ public class XDrive1Test extends OpMode {
         fl *= (1+rt);
         bl *= (1+rt);
 
-        float bend = y2;
-        bend *= (1-(lt2/2));
-
         float lift = y3;
         lift *= (1-(lt3/2));
+
+
+        float bendPower = y2;
+        bendPower = (1-(lt2/2));
+
+        bendPosition = motorBend.getCurrentPosition();
+
+        if (bendPosition > 0){
+            bendPosition = 0;
+        }
+        else if (bendPosition < -123){
+            bendPosition = -123;
+        }
 
 
         //Writes values for motors and servos IF the motors/servos passed the try catch
@@ -348,7 +378,9 @@ public class XDrive1Test extends OpMode {
             motorBackLeft.setPower(bl);
         }
         if(!bDebugBend){
-            motorBend.setTargetPosition((int)bendRotation);
+            motorBend.setTargetPosition((int)bendPosition);
+            motorBend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorBend.setPower(bendPower);
         }
         if(!bDebugLift){
             motorLift.setPower(lift);
@@ -464,7 +496,8 @@ public class XDrive1Test extends OpMode {
 }
 
 //Bruh
-
+// savvyd yup das me ;)
+// You've been kerpranked by Kale
 
 
 
